@@ -1,2 +1,4 @@
 # CubeTower
-Cubes and Tower
+Использованные технологии: Zenject, UniRx, LeanLocalization
+
+Паттерн проектирования: MVVM

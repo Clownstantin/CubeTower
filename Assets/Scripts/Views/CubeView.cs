@@ -7,28 +7,22 @@ using Zenject;
 public class CubeView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
 	[SerializeField] private Image _cubeImage;
+	[SerializeField] private CanvasGroup _canvasGroup;
 
 	private RectTransform _rectTransform;
 	private GameViewModel _gameViewModel;
 	private CubeModel _cubeModel;
 	private Canvas _canvas;
-	private CanvasGroup _canvasGroup;
 	private Transform _originalParent;
 	private AnimationService _animationService;
 	private List<RaycastResult> _raycastResults = new();
 	private Vector3 _originalPosition;
 
-
-	private void Awake()
+	private void Start()
 	{
 		_rectTransform = transform as RectTransform;
-		_canvasGroup = GetComponent<CanvasGroup>();
-
-		if(_canvasGroup == null)
-			_canvasGroup = gameObject.AddComponent<CanvasGroup>();
+		_rectTransform.localScale = Vector3.one;
 	}
-
-	private void Start() => _rectTransform.localScale = Vector3.one;
 
 	[Inject]
 	public void Construct(GameViewModel gameViewModel, Canvas canvas, AnimationService animationService)
@@ -86,7 +80,6 @@ public class CubeView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 				isHole = true;
 				holePosition = result.gameObject.transform.position;
 
-				// Проверяем источник кубика
 				_gameViewModel.RemoveCubeCommand.Execute(_cubeModel);
 				break;
 			}
@@ -100,6 +93,7 @@ public class CubeView : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
 	private void ResetCube()
 	{
+		_cubeModel.Position = _originalPosition;
 		_rectTransform.position = _originalPosition;
 		_rectTransform.SetParent(_originalParent);
 		_rectTransform.SetSiblingIndex(_cubeModel.Index);
